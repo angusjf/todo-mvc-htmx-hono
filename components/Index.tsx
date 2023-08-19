@@ -1,6 +1,6 @@
 /** @jsx jsx */
 
-import { jsx } from "https://deno.land/x/hono@v3.4.1/middleware.ts";
+import { html, jsx } from "https://deno.land/x/hono@v3.4.1/middleware.ts";
 import { TodoList } from "./TodoList.tsx";
 import { ItemCount } from "./ItemCount.tsx";
 import { Todo } from "../todo.ts";
@@ -59,7 +59,7 @@ const App = ({ todos, filter, itemsLeft }: AppProps) => (
           id="txtTodo"
           name="todo"
           placeholder="What needs to be done?"
-          autofocus=""
+          autofocus
         />
       </form>
     </header>
@@ -90,33 +90,29 @@ const App = ({ todos, filter, itemsLeft }: AppProps) => (
   </section>
 );
 
-export const Index = (props: AppProps) => (
-  <html lang="en">
-    <head>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Template • TodoMVC</title>
-      <link rel="stylesheet" href="/css/todomvc-common/base.css" />
-      <link rel="stylesheet" href="/css/todomvc-app-css/index.css" />
-    </head>
+export const Index = (props: AppProps) =>
+  html`<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Template • TodoMVC</title>
+        <link rel="stylesheet" href="/css/todomvc-common/base.css" />
+        <link rel="stylesheet" href="/css/todomvc-app-css/index.css" />
+      </head>
 
-    <body>
-      <App {...props} />
-      <footer class="info">
-        <p>Click to edit a todo</p>
-        <p>
-          Template by <a href="http://sindresorhus.com">Sindre Sorhus</a>
-        </p>
-        <p>
-          Created by{" "}
-          <a href="https://twitter.com/rajasegar_c">Rajasegar Chandran</a>
-        </p>
-        <p>
-          Part of <a href="http://todomvc.com">TodoMVC</a>
-        </p>
-      </footer>
-      <script src="https://unpkg.com/htmx.org@1.3.1"></script>
-      <script src="https://unpkg.com/hyperscript.org@0.0.5"></script>
-    </body>
-  </html>
-);
+      <body>
+        ${(<App {...props} />)}
+        <footer class="info">
+          <p>Click to edit a todo</p>
+          <p>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p>
+          <p>
+            Created by
+            <a href="https://twitter.com/rajasegar_c">Rajasegar Chandran</a>
+          </p>
+          <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+        </footer>
+        <script src="https://unpkg.com/htmx.org@1.3.1"></script>
+        <script src="https://unpkg.com/hyperscript.org@0.0.5"></script>
+      </body>
+    </html>`;

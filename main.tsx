@@ -6,6 +6,7 @@ import {
   serveStatic,
   jsx,
   Fragment,
+  html,
 } from "https://deno.land/x/hono@v3.4.1/middleware.ts";
 
 import { TodoList } from "./components/TodoList.tsx";
@@ -54,7 +55,6 @@ app.get("/", (c) => {
   }
 
   return c.html(
-    "<!DOCTYPE html>" +
     <Index todos={filteredTodos} filter={filter} itemsLeft={getItemsLeft()} />
   );
 });
