@@ -28,10 +28,6 @@ let todos = [
   },
 ];
 
-const createFragment = (props: unknown, children: string[]) => {
-  return children.join("");
-};
-
 const getItemsLeft = () => todos.filter((t) => !t.done).length;
 
 const app = new Hono();
@@ -105,7 +101,7 @@ app.post("/todos/update/:id", async (c) => {
   const body = await c.req.parseBody();
 
   const todo = todos.find((t) => t.id === id)!;
-  todo.name = body.name as string;
+  todo.name = body.name instanceof File ? "" : body.name;
 
   return c.html(
     <>
