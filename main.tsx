@@ -14,8 +14,9 @@ import { ItemCount } from "./components/ItemCount.tsx";
 import { Index } from "./components/Index.tsx";
 import { TodoItem } from "./components/TodoItem.tsx";
 import { EditItem } from "./components/EditTodo.tsx";
+import { Todo } from "./todo.ts";
 
-let todos = [
+let TODOS = [
   {
     id: crypto.randomUUID(),
     name: "Taste htmx",
@@ -28,47 +29,52 @@ let todos = [
   },
 ];
 
-const getItemsLeft = () => todos.filter((t) => !t.done).length;
+const getItemsLeft = () => TODOS.filter((t) => !t.done).length;
 
 const app = new Hono();
 
-app.get("/", (c) => {
-  const filter = c.req.query("filter");
-
-  let filteredTodos = [];
+const filterTodos = (filter: string, todos: Todo[]): Todo[] => {
   switch (filter) {
     case "all":
-      filteredTodos = todos;
-      break;
+      return todos;
     case "active":
-      filteredTodos = todos.filter((t) => !t.done);
-      break;
+      return todos.filter((t) => !t.done);
     case "completed":
-      filteredTodos = todos.filter((t) => t.done);
-      break;
+      return todos.filter((t) => t.done);
     default:
-      filteredTodos = todos;
+      return todos;
   }
+};
+
+app.get("/", (c) => {
+  const { filter } = c.req.query();
 
   return c.html(
-    <Index todos={filteredTodos} filter={filter} itemsLeft={getItemsLeft()} />
+    <Index
+      todos={filterTodos(filter, TODOS)}
+      filter={filter}
+      itemsLeft={getItemsLeft()}
+    />
   );
 });
 
 app.post("/todos", async (c) => {
-  const body = await c.req.parseBody();
+  const { filter } = c.req.query();
+  const { todo: name } = await c.req.parseBody();
 
   const newTodo = {
     id: crypto.randomUUID(),
-    name: body["todo"] as string,
+    name: name instanceof File ? "" : name,
     done: false,
   };
 
-  todos = [newTodo, ...todos];
+  TODOS = [newTodo, ...TODOS];
 
   return c.html(
     <>
-      <TodoItem todo={newTodo} />
+      {filterTodos(filter, [newTodo]).length ? (
+        <TodoItem todo={newTodo} filter={filter} />
+      ) : null}
       <ItemCount itemsLeft={getItemsLeft()} />
     </>
   );
@@ -77,35 +83,39 @@ app.post("/todos", async (c) => {
 app.get("/todos/edit/:id", (c) => {
   const id = c.req.param("id");
 
-  const todo = todos.find((t) => t.id === id)!;
+  const todo = TODOS.find((t) => t.id === id)!;
 
   return c.html(<EditItem todo={todo} />);
 });
 
 app.patch("/todos/:id", (c) => {
-  const id = c.req.param("id");
+  const { filter } = c.req.query();
+  const { id } = c.req.param();
 
-  const todo = todos.find((t) => t.id === id)!;
+  const todo = TODOS.find((t) => t.id === id)!;
   todo.done = !todo.done;
 
   return c.html(
     <>
-      <TodoItem todo={todo} />
+      {filterTodos(filter, [todo]).length ? (
+        <TodoItem todo={todo} filter={filter} />
+      ) : null}
       <ItemCount itemsLeft={getItemsLeft()} />
     </>
   );
 });
 
 app.post("/todos/update/:id", async (c) => {
-  const id = c.req.param("id");
+  const { filter } = c.req.query();
+  const { id } = c.req.param();
   const body = await c.req.parseBody();
 
-  const todo = todos.find((t) => t.id === id)!;
+  const todo = TODOS.find((t) => t.id === id)!;
   todo.name = body.name instanceof File ? "" : body.name;
 
   return c.html(
     <>
-      <TodoItem todo={todo} />
+      <TodoItem todo={todo} filter={filter} />
       <ItemCount itemsLeft={getItemsLeft()} />
     </>
   );
@@ -113,29 +123,32 @@ app.post("/todos/update/:id", async (c) => {
 
 app.delete("/todos/:id", (c) => {
   const id = c.req.param("id");
-  todos = todos.filter((t) => t.id !== id)!;
+  TODOS = TODOS.filter((t) => t.id !== id)!;
 
   return c.html(<ItemCount itemsLeft={getItemsLeft()} />);
 });
 
 app.post("/todos/clear-completed", (c) => {
-  todos = todos.filter((t) => !t.done);
+  const { filter } = c.req.query();
+
+  TODOS = TODOS.filter((t) => !t.done);
 
   return c.html(
     <>
-      <TodoList todos={todos} />
+      <TodoList todos={TODOS} filter={filter} />
       <ItemCount itemsLeft={getItemsLeft()} />
     </>
   );
 });
 
 app.post("/todos/toggle-all", (c) => {
-  const all = todos.every((todo) => todo.done);
-  todos.forEach((todo) => (todo.done = !all));
+  const { filter } = c.req.query();
+  const all = TODOS.every((todo) => todo.done);
+  TODOS.forEach((todo) => (todo.done = !all));
 
   return c.html(
     <>
-      <TodoList todos={todos} />
+      <TodoList todos={TODOS} filter={filter} />
       <ItemCount itemsLeft={getItemsLeft()} />
     </>
   );

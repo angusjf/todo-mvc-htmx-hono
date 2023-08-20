@@ -7,10 +7,16 @@ import { Todo } from "../todo.ts";
 
 import { TodoItem } from "./TodoItem.tsx";
 
-export const TodoList = ({ todos }: { todos: Todo[] }) => (
+export const TodoList = ({
+  todos,
+  filter,
+}: {
+  todos: Todo[];
+  filter?: string;
+}) => (
   <>
     {todos.map((todo) => (
-      <TodoItem todo={todo} />
+      <TodoItem todo={todo} filter={filter} />
     ))}
   </>
 );

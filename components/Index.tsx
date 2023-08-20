@@ -49,7 +49,7 @@ const App = ({ todos, filter, itemsLeft }: AppProps) => (
     <header class="header">
       <h1>todos</h1>
       <form
-        hx-post="/todos"
+        hx-post={"/todos?filter=" + filter}
         hx-target="#todo-list"
         hx-swap="afterbegin"
         _="on htmx:afterOnLoad set #txtTodo.value to ''"
@@ -73,7 +73,7 @@ const App = ({ todos, filter, itemsLeft }: AppProps) => (
       />
       <label for="toggle-all">Mark all as complete</label>
       <ul class="todo-list" id="todo-list">
-        <TodoList todos={todos} />
+        <TodoList todos={todos} filter={filter} />
       </ul>
     </section>
     <footer class="footer">

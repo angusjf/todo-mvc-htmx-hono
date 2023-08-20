@@ -2,12 +2,12 @@
 import { jsx } from "https://deno.land/x/hono@v3.4.1/middleware.ts";
 import { Todo } from "../todo.ts";
 
-export const TodoItem = ({ todo }: { todo: Todo }) => (
+export const TodoItem = ({ todo, filter }: { todo: Todo; filter?: string }) => (
   <li class={todo.done ? "completed" : ""} id={"todo-" + todo.id}>
     <div class="view">
       <input
         class="toggle"
-        hx-patch={"/todos/" + todo.id}
+        hx-patch={"/todos/" + todo.id + "?filter=" + filter}
         type="checkbox"
         checked={todo.done}
         hx-target={"#todo-" + todo.id}
