@@ -22,7 +22,7 @@ export const TodoItem = ({ todo, filter }: { todo: Todo; filter?: string }) => (
       </label>
       <button
         class="destroy"
-        hx-delete={"/todos/" + todo.id}
+        hx-delete={"/todos/" + todo.id + "?filter=" + filter}
         _={"on htmx:afterOnLoad remove #todo-" + todo.id}
       />
     </div>

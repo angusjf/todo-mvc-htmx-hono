@@ -2,49 +2,15 @@
 
 import { html, jsx } from "https://deno.land/x/hono@v3.4.1/middleware.ts";
 import { TodoList } from "./TodoList.tsx";
-import { ItemCount } from "./ItemCount.tsx";
-import { Todo } from "../todo.ts";
+import { Todo, filterTodos } from "../todo.ts";
+import { Footer } from "./Footer.tsx";
 
 type AppProps = {
   todos: Todo[];
   filter?: "all" | "active" | "completed" | string;
-  itemsLeft: number;
 };
 
-const Filters = ({
-  filter,
-}: {
-  filter?: "all" | "active" | "completed" | string;
-}) => (
-  <ul class="filters">
-    <li>
-      <a
-        class={filter === "all" || filter === "" ? "selected" : undefined}
-        href="/?filter=all"
-      >
-        All
-      </a>
-    </li>
-    <li>
-      <a
-        class={filter === "active" ? "selected" : undefined}
-        href="/?filter=active"
-      >
-        Active
-      </a>
-    </li>
-    <li>
-      <a
-        class={filter === "completed" ? "selected" : undefined}
-        href="/?filter=completed"
-      >
-        Completed
-      </a>
-    </li>
-  </ul>
-);
-
-const App = ({ todos, filter, itemsLeft }: AppProps) => (
+const App = ({ todos, filter }: AppProps) => (
   <section class="todoapp">
     <header class="header">
       <h1>todos</h1>
@@ -70,23 +36,12 @@ const App = ({ todos, filter, itemsLeft }: AppProps) => (
         type="checkbox"
         hx-post="/todos/toggle-all"
         hx-target="#todo-list"
+        hx-swap="outerHTML"
       />
       <label for="toggle-all">Mark all as complete</label>
-      <ul class="todo-list" id="todo-list">
-        <TodoList todos={todos} filter={filter} />
-      </ul>
+      <TodoList todos={todos} filter={filter} />
     </section>
-    <footer class="footer">
-      <ItemCount itemsLeft={itemsLeft} />
-      <Filters filter={filter} />
-      <button
-        class="clear-completed"
-        hx-post="/todos/clear-completed"
-        hx-target="#todo-list"
-      >
-        Clear completed
-      </button>
-    </footer>
+    <Footer todos={todos} filter={filter} />
   </section>
 );
 
