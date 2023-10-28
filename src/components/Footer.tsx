@@ -1,6 +1,3 @@
-
-
-
 import { Todo } from "../todo";
 
 const Filters = ({
@@ -46,7 +43,7 @@ export const Footer = ({
   const itemsLeft = todos.filter((t) => !t.done).length;
 
   return (
-    <div id="footer" hx-swap-oob="true">
+    <div id="footer">
       {todos.length > 0 && (
         <footer class="footer">
           <span class="todo-count">
@@ -54,14 +51,9 @@ export const Footer = ({
             left
           </span>
           <Filters filter={filter} />
-          <button
-            class="clear-completed"
-            hx-post="/todos/clear-completed"
-            hx-target="#todo-list"
-            hx-swap="outerHTML"
-          >
-            Clear completed
-          </button>
+          <form method="post" action="/todos/clear-completed">
+            <button class="clear-completed">Clear completed</button>
+          </form>
         </footer>
       )}
     </div>

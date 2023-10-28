@@ -12,12 +12,7 @@ const App = ({ todos, filter }: AppProps) => (
   <section class="todoapp">
     <header class="header">
       <h1>todos</h1>
-      <form
-        hx-post={"/todos?filter=" + filter}
-        hx-target="#todo-list"
-        hx-swap="afterbegin"
-        _="on htmx:afterOnLoad set #txtTodo.value to ''"
-      >
+      <form action={"/todos?filter=" + filter} method="POST">
         <input
           class="new-todo"
           id="txtTodo"
@@ -28,15 +23,10 @@ const App = ({ todos, filter }: AppProps) => (
       </form>
     </header>
     <section class="main">
-      <input
-        class="toggle-all"
-        id="toggle-all"
-        type="checkbox"
-        hx-post="/todos/toggle-all"
-        hx-target="#todo-list"
-        hx-swap="outerHTML"
-      />
-      <label for="toggle-all">Mark all as complete</label>
+      <form method="POST" action="/todos/toggle-all">
+        <input class="toggle-all" id="toggle-all" type="submit" />
+        <label for="toggle-all">Mark all as complete</label>
+      </form>
       <TodoList todos={todos} filter={filter} />
     </section>
     <Footer todos={todos} filter={filter} />
@@ -65,7 +55,5 @@ export const Index = (props: AppProps) =>
           </p>
           <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
         </footer>
-        <script src="https://unpkg.com/htmx.org@1.3.1"></script>
-        <script src="https://unpkg.com/hyperscript.org@0.0.5"></script>
       </body>
     </html>`;
