@@ -1,6 +1,5 @@
-/** @jsx jsx */
-import { jsx } from "https://deno.land/x/hono@v3.4.1/middleware.ts";
-import { Todo } from "../todo.ts";
+
+import { Todo } from "../todo";
 
 export const TodoItem = ({ todo, filter }: { todo: Todo; filter?: string }) => (
   <li class={todo.done ? "completed" : ""} id={"todo-" + todo.id}>

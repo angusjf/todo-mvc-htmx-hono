@@ -1,7 +1,4 @@
-/** @jsx jsx */
-import { jsx } from "https://deno.land/x/hono@v3.4.1/middleware.ts";
-
-import { Todo } from "../todo.ts";
+import { Todo } from "../todo";
 
 export const EditItem = ({ todo }: { todo: Todo }) => (
   <form hx-post={"/todos/update/" + todo.id}>

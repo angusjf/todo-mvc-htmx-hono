@@ -1,19 +1,12 @@
-/** @jsx jsx */
-/** @jsxFrag Fragment */
+import { Hono } from "hono";
+import { serveStatic } from "hono/bun";
 
-import { Hono } from "https://deno.land/x/hono@v3.4.1/mod.ts";
-import {
-  serveStatic,
-  jsx,
-  Fragment,
-} from "https://deno.land/x/hono@v3.4.1/middleware.ts";
-
-import { TodoList } from "./components/TodoList.tsx";
-import { Footer } from "./components/Footer.tsx";
-import { Index } from "./components/Index.tsx";
-import { TodoItem } from "./components/TodoItem.tsx";
-import { EditItem } from "./components/EditTodo.tsx";
-import { Todo, filterTodos } from "./todo.ts";
+import { TodoList } from "./components/TodoList";
+import { Footer } from "./components/Footer";
+import { Index } from "./components/Index";
+import { TodoItem } from "./components/TodoItem";
+import { EditItem } from "./components/EditTodo";
+import { Todo, filterTodos } from "./todo";
 
 let TODOS: Todo[] = [
   {
@@ -42,7 +35,7 @@ app.post("/todos", async (c) => {
 
   const newTodo = {
     id: crypto.randomUUID(),
-    name: name instanceof File ? "" : name,
+    name: typeof name === "string" ?  name : "",
     done: false,
   };
 
@@ -89,7 +82,7 @@ app.post("/todos/update/:id", async (c) => {
   const body = await c.req.parseBody();
 
   const todo = TODOS.find((t) => t.id === id)!;
-  todo.name = body.name instanceof File ? "" : body.name;
+  todo.name = typeof body.name == 'string' ? body.name : "";
 
   return c.html(
     <>
@@ -135,4 +128,4 @@ app.post("/todos/toggle-all", (c) => {
 
 app.use("/*", serveStatic({ root: "./assets/" }));
 
-Deno.serve(app.fetch);
+export default app

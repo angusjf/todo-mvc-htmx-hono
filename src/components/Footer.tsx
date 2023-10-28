@@ -1,8 +1,7 @@
-/** @jsx jsx */
-/** @jsxFrag Fragment */
 
-import { jsx, Fragment } from "https://deno.land/x/hono@v3.4.1/middleware.ts";
-import { Todo, filterTodos } from "../todo.ts";
+
+
+import { Todo } from "../todo";
 
 const Filters = ({
   filter,

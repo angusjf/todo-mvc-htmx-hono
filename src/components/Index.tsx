@@ -1,9 +1,7 @@
-/** @jsx jsx */
-
-import { html, jsx } from "https://deno.land/x/hono@v3.4.1/middleware.ts";
-import { TodoList } from "./TodoList.tsx";
-import { Todo, filterTodos } from "../todo.ts";
-import { Footer } from "./Footer.tsx";
+import { html } from "hono/html";
+import { TodoList } from "./TodoList";
+import { Todo, filterTodos } from "../todo";
+import { Footer } from "./Footer";
 
 type AppProps = {
   todos: Todo[];
