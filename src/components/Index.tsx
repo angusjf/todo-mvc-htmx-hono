@@ -1,7 +1,7 @@
 import { html } from "hono/html";
-import { TodoList } from "./TodoList";
 import { Todo, filterTodos } from "../todo";
 import { Footer } from "./Footer";
+import { TodoItem } from "./TodoItem";
 
 type AppProps = {
   todos: Todo[];
@@ -9,13 +9,12 @@ type AppProps = {
 };
 
 const App = ({ todos, filter }: AppProps) => (
-  <section class="todoapp">
-    <header class="header">
+  <section>
+    <header>
       <h1>todos</h1>
       <form action={"/todos?filter=" + filter} method="POST">
         <input
           class="new-todo"
-          id="txtTodo"
           name="todo"
           placeholder="What needs to be done?"
           autofocus
@@ -24,10 +23,18 @@ const App = ({ todos, filter }: AppProps) => (
     </header>
     <section class="main">
       <form method="POST" action={"/todos/toggle-all?filter=" + filter}>
-        <input class="toggle-all" id="toggle-all" type="submit" />
-        <label for="toggle-all">Mark all as complete</label>
+        <input
+          class="toggle-all"
+          id="toggle-all"
+          type="submit"
+          value="Mark all as complete"
+        />
       </form>
-      <TodoList todos={todos} filter={filter} />
+      <ul class="todo-list" id="todo-list">
+        {filterTodos(filter, todos).map((todo) => (
+          <TodoItem todo={todo} filter={filter} />
+        ))}
+      </ul>
     </section>
     <Footer todos={todos} filter={filter} />
   </section>
@@ -40,20 +47,46 @@ export const Index = (props: AppProps) =>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Template • TodoMVC</title>
-        <link rel="stylesheet" href="/css/todomvc-common/base.css" />
-        <link rel="stylesheet" href="/css/todomvc-app-css/index.css" />
+        <style>
+          :root {
+            font-family: system-ui;
+          }
+          body {
+            max-width: 400px;
+            margin: 0 auto;
+          }
+          .todo-list {
+            display: block;
+            padding-inline-start: 0;
+          }
+          .todo-list > li {
+            display: flex;
+          }
+          .todo-list > li input {
+            appearance: none;
+          }
+          .todo-list > li button {
+            appearance: none;
+            background: transparent;
+            border: 0;
+          }
+          .todo-list > li[data-checked] button {
+            border-radius: 4px;
+            border: 2px solid black;
+            width: 3ch;
+            height: 3ch;
+          }
+          footer > ul {
+            display: flex;
+            gap: 40px;
+          }
+          footer > ul > li {
+            display: block;
+          }
+          li
+        </style>
       </head>
-
       <body>
         ${(<App {...props} />)}
-        <footer class="info">
-          <p>Click to edit a todo</p>
-          <p>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p>
-          <p>
-            Created by
-            <a href="https://twitter.com/rajasegar_c">Rajasegar Chandran</a>
-          </p>
-          <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
-        </footer>
       </body>
     </html>`;

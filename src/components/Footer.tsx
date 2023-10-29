@@ -42,23 +42,17 @@ export const Footer = ({
 }) => {
   const itemsLeft = todos.filter((t) => !t.done).length;
 
-  return (
-    <div id="footer">
-      {todos.length > 0 && (
-        <footer class="footer">
-          <span class="todo-count">
-            <strong>{itemsLeft}</strong> {itemsLeft != 1 ? "items" : "item"}{" "}
-            left
-          </span>
-          <Filters filter={filter} />
-          <form
-            method="post"
-            action={"/todos/clear-completed?filter=" + filter}
-          >
-            <button class="clear-completed">Clear completed</button>
-          </form>
-        </footer>
-      )}
-    </div>
+  return todos.length > 0 ? (
+    <footer>
+      <span>
+        <strong>{itemsLeft}</strong> {itemsLeft != 1 ? "items" : "item"} left
+      </span>
+      <Filters filter={filter} />
+      <form method="post" action={"/todos/clear-completed?filter=" + filter}>
+        <button>Clear completed</button>
+      </form>
+    </footer>
+  ) : (
+    <></>
   );
 };
