@@ -12,9 +12,6 @@ export const TodoItem = ({ todo, filter }: { todo: Todo; filter?: string }) => (
       <form method="post" action={"/todos/update/" + todo.id}>
         <input class="edit" type="text" name="name" value={todo.name} />
       </form>
-      <form>
-        <label hx-get={"/todos/edit/" + todo.id}>{todo.name}</label>
-      </form>
       <form
         action={"/todos/delete/" + todo.id + "?filter=" + filter}
         method="POST"

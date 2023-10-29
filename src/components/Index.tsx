@@ -23,7 +23,7 @@ const App = ({ todos, filter }: AppProps) => (
       </form>
     </header>
     <section class="main">
-      <form method="POST" action="/todos/toggle-all">
+      <form method="POST" action={"/todos/toggle-all?filter=" + filter}>
         <input class="toggle-all" id="toggle-all" type="submit" />
         <label for="toggle-all">Mark all as complete</label>
       </form>

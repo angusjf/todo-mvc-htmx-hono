@@ -51,7 +51,10 @@ export const Footer = ({
             left
           </span>
           <Filters filter={filter} />
-          <form method="post" action="/todos/clear-completed">
+          <form
+            method="post"
+            action={"/todos/clear-completed?filter=" + filter}
+          >
             <button class="clear-completed">Clear completed</button>
           </form>
         </footer>
